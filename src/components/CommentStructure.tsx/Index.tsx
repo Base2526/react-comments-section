@@ -7,6 +7,9 @@ import '@szhsin/react-menu/dist/core.css'
 import DeleteModal from './DeleteModal'
 import React from 'react'
 
+import { Avatar, Button } from "antd";
+import { UserOutlined } from '@ant-design/icons';
+
 interface CommentStructureProps {
   info: {
     userId: string
@@ -68,51 +71,50 @@ const CommentStructure = ({
 
   const timeAgo = (date: string | number | Date): string => {
     const units = [
-      { label: 'year', seconds: 31536000 },
-      { label: 'month', seconds: 2592000 },
-      { label: 'day', seconds: 86400 },
-      { label: 'hour', seconds: 3600 },
-      { label: 'minute', seconds: 60 },
-      { label: 'second', seconds: 1 }
-    ]
-
-    const time = Math.floor(
-      (new Date().valueOf() - new Date(date).valueOf()) / 1000
-    )
-
-    for (let { label, seconds } of units) {
-      const interval = Math.floor(time / seconds)
+      { label: 'y', seconds: 31536000 },
+      { label: 'mo', seconds: 2592000 },
+      { label: 'd', seconds: 86400 },
+      { label: 'h', seconds: 3600 },
+      { label: 'm', seconds: 60 },
+      { label: 's', seconds: 1 }
+    ];
+  
+    const time = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+  
+    for (const { label, seconds } of units) {
+      const interval = Math.floor(time / seconds);
       if (interval >= 1) {
-        return `${interval} ${label}${interval > 1 ? 's' : ''} ago`
+        return `${interval}${label}`;
       }
     }
-
-    return 'just now'
-  }
+  
+    return 'now';
+  };  
 
   const userInfo = () => {
     return (
       <div className='commentsTwo'>
         <a className='userLink' target='_blank' href={info.userProfile}>
           <div>
-            <img
+            {/* <img
               src={info.avatarUrl}
               alt='userIcon'
               className='imgdefault'
               style={
                 globalStore.imgStyle ||
                 (!globalStore.replyTop
-                  ? { position: 'relative', top: 7 }
+                  ? { display: 'flex', justifyContent: 'center', alignItems: 'center' }
                   : null)
               }
-            />
+            /> */}
+            <Avatar size={32} src={info.avatarUrl} icon={<UserOutlined />} />
           </div>
           <div className='fullName'>
             {info.fullName}
-            <span className='commenttimestamp'>
+            {/* <span className='commenttimestamp'>
               {showTimestamp &&
                 (info.timestamp == null ? null : timeAgo(info.timestamp))}
-            </span>
+            </span> */}
           </div>
         </a>
       </div>
@@ -124,7 +126,7 @@ const CommentStructure = ({
       <div className='halfDiv'>
         <div className='userInfo'>
           <div>{info.text}</div>
-          {userInfo()}
+          replyTopSection{userInfo()}
         </div>
         {currentUser && optionsMenu()}
       </div>
@@ -134,34 +136,43 @@ const CommentStructure = ({
   const replyBottomSection = () => {
     return (
       <div className='halfDiv'>
-        <div className='userInfo'>
-          {userInfo()}
+        <div className='userInfo' >
+         {userInfo()}
           {globalStore.advancedInput ? (
-            <div
-              className='infoStyle'
-              dangerouslySetInnerHTML={{
-                __html: info.text
-              }}
-            />
+            <div style={{display:"flex"}}>
+              <div
+                className='infoStyle'
+                style={{backgroundColor: "gray", padding: '10px', borderRadius: "15px"}}
+                dangerouslySetInnerHTML={{
+                  __html: info.text
+                }}
+              />
+              {currentUser && optionsMenu()}
+            </div>
           ) : (
-            <div className='infoStyle'>{info.text}</div>
+            <div style={{display:"flex"}}>
+              <div className='infoStyle'>{info.text}</div>
+              {currentUser && optionsMenu()}
+            </div>
           )}
-          <div style={{ marginLeft: 32 }}>
+          <div style={{ marginLeft: 36 }}>
             {' '}
             {currentUser && (
               <div>
-                <button
-                  className='replyBtn'
-                  onClick={() => globalStore.handleAction(info.comId, false)}
-                >
-                  <div className='replyIcon' />
-                  <span style={{ marginLeft: 17 }}>Reply</span>
-                </button>
+                <span className='commenttimestamp'>
+                  {showTimestamp && (info.timestamp == null ? null : timeAgo(info.timestamp))}
+                </span>
+                <Button 
+                  className="replyBtn"
+                  color="default" 
+                  variant="link" 
+                  size="small"
+                  onClick={()=>  globalStore.handleAction(info.comId, false) } >Reply</Button>
               </div>
             )}
           </div>
         </div>
-        {currentUser && optionsMenu()}
+        
       </div>
     )
   }
@@ -201,17 +212,14 @@ const CommentStructure = ({
     }
   }
 
-  return (
-    <div>
-      {editMode
-        ? actionModeSection('edit')
-        : replyMode
-        ? actionModeSection('reply')
-        : globalStore.replyTop
-        ? replyTopSection()
-        : replyBottomSection()}
-    </div>
-  )
+  const renderActionSection = () => {
+    if (editMode) return actionModeSection('edit');
+    if (replyMode) return actionModeSection('reply');
+    if (globalStore.replyTop) return replyTopSection();
+    return replyBottomSection();
+  };
+
+  return ( <div> { renderActionSection() } </div> )
 }
 
 export default CommentStructure

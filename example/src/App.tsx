@@ -1,14 +1,14 @@
 import React from 'react'
 import AdvancedComponent from './components/AdvancedComponent'
-import ClassComponent from './components/ClassComponent'
-import CustomComponent from './components/CustomComponent'
-import DefaultComponent from './components/DefaultComponent'
-import LogInComponent from './components/LogInComponent'
+// import ClassComponent from './components/ClassComponent'
+// import CustomComponent from './components/CustomComponent'
+// import DefaultComponent from './components/DefaultComponent'
+// import LogInComponent from './components/LogInComponent'
 
 const App = () => {
   return (
     <div className='example-div'>
-      <div className='head-title'>Demo Examples</div>
+      {/* <div className='head-title'>Demo Examples</div>
       <hr style={{ borderTop: '1px solid', width: '100%' }} />
       <div className='example-row'>
         <DefaultComponent />
@@ -17,7 +17,8 @@ const App = () => {
       <div className='example-row'>
         <CustomComponent />
         <LogInComponent />
-      </div>
+      </div> */}
+
       <div className='example-row'>
         <AdvancedComponent />
       </div>

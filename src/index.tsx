@@ -87,6 +87,7 @@ export const CommentSection = ({
   currentData,
   advancedInput
 }: CommentSectionProps) => {
+
   return (
     <GlobalProvider
       currentUser={currentUser}

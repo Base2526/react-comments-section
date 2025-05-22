@@ -66,23 +66,27 @@ const AdvancedComponent = () => {
 
   return (
     <div style={{ width: '100%' }}>
-      <a
+      {/* <a
         style={{ color: 'black', cursor: 'pointer' }}
         target='_blank'
         rel='noopener noreferrer'
         href='https://github.com/RiyaNegi/react-comments-section/blob/main/example/src/components/AdvancedComponent.tsx'
       >
-        <span className='title'>Advanced Input Component</span>
-      </a>
+        <span className='title'>Advanced Input Component - 001</span>
+      </a> */}
       <CommentSection
-        currentUser={{
-          currentUserId: '01a',
+        currentUser={ 
+          // null
+        {
+          currentUserId: '02b',
           currentUserImg:
             'https://ui-avatars.com/api/name=Riya&background=random',
           currentUserProfile:
             'https://www.linkedin.com/in/riya-negi-8879631a9/',
           currentUserFullName: 'Riya Negi'
-        }}
+        } 
+      
+      }
         hrStyle={{ border: '0.5px solid #ff0072' }}
         commentData={data}
         currentData={(data: any) => {

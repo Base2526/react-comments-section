@@ -1,10 +1,10 @@
 {
   "name": "react-comments-section",
-  "version": "3.2.0",
-  "description": "React component library for a functioning comments section",
-  "author": "RiyaNegi",
+  "version": "0.0.3",
+  "description": "React component library for a functioning comments section [TS]",
+  "author": "Base2526",
   "license": "MIT",
-  "repository": "RiyaNegi/react-comments-section",
+  "repository": "Base2526/react-comments-section-ts",
   "main": "dist/index.js",
   "style": "dist/styles.css",
   "module": "dist/index.modern.js",
@@ -23,7 +23,8 @@
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && npm run build",
-    "deploy": "gh-pages -d example/build"
+    "deploy": "gh-pages -d example/build",
+    "watch": "microbundle-crl-with-assets watch --css-modules false --no-compress --format modern,cjs"
   },
   "peerDependencies": {
     "react": ">=16.0.0"
@@ -61,21 +62,23 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "^3.4.1",
+    "rimraf": "^6.0.1",
     "typescript": "^3.9.10"
   },
   "files": [
     "dist"
   ],
   "dependencies": {
+    "@ant-design/icons": "^5.6.1",
     "@emotion/react": "^11.9.0",
     "@szhsin/react-menu": "^3.0.1",
     "@types/lodash": "^4.14.182",
     "@types/uuid": "^8.3.4",
+    "antd": "^5.25.2",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "emoji-picker-react": "^3.5.1",
     "html-to-draftjs": "^1.5.0",
-    "react-comments-section": "^3.0.1",
     "react-draft-wysiwyg": "^1.14.7",
     "react-responsive-modal": "^6.2.0",
     "sass": "^1.51.0"

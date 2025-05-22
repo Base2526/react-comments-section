@@ -1,7 +1,7 @@
 import CommentStructure from '../CommentStructure.tsx/Index'
 import InputField from '../InputField/Index'
 import './CommentSection.css'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/Provider'
 import _ from 'lodash'
 import React from 'react'
@@ -30,6 +30,10 @@ const CommentSection = ({
   customNoComment,
   showTimestamp = true
 }: CommentSectionProps) => {
+
+  useEffect(()=>{
+    console.log("CommentSection");
+  }, []);
   const handleLogin = () => {
     if (typeof logIn.onLogin === 'function') {
       logIn.onLogin()

@@ -7,6 +7,8 @@ import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 
+import { Button } from "antd";
+
 interface AdvancedInputProps {
   formStyle?: object
   handleSubmit: Function
@@ -105,12 +107,12 @@ const AdvancedInput = ({
               toolbar={{
                 options: [
                   'inline',
-                  'blockType',
-                  'list',
-                  'colorPicker',
-                  'link',
-                  'emoji',
-                  'image'
+                  // 'blockType',
+                  // 'list',
+                  // 'colorPicker',
+                  // 'link',
+                  // 'emoji',
+                  // 'image'
                 ],
                 link: {
                   inDropdown: false,
@@ -177,20 +179,30 @@ const AdvancedInput = ({
           /> */}
           <div className='advanced-btns'>
             {mode && (
-              <button
-                className='advanced-cancel cancelBtn'
-                style={globalStore.cancelBtnStyle || cancelBtnStyle}
-                type='button'
+              // <button
+              //   className='advanced-cancel cancelBtn'
+                // style={globalStore.cancelBtnStyle || cancelBtnStyle}
+                // type='button'
+                // onClick={() =>
+                //   mode === 'editMode'
+                //     ? globalStore.handleAction(comId, true)
+                //     : globalStore.handleAction(comId, false)
+                // }
+              // >
+              //   Cancel
+              // </button>
+
+              <Button
+                // className='advanced-cancel cancelBtn'
+                // style={globalStore.cancelBtnStyle || cancelBtnStyle}
                 onClick={() =>
                   mode === 'editMode'
                     ? globalStore.handleAction(comId, true)
                     : globalStore.handleAction(comId, false)
                 }
-              >
-                Cancel
-              </button>
+                type="link">Cancel</Button>
             )}
-            <button
+            {/* <button
               className='advanced-post postBtn'
               type='submit'
               disabled={editText === '<p></p>' ? true : false}
@@ -203,7 +215,19 @@ const AdvancedInput = ({
               }
             >
               Post
-            </button>
+            </button> */}
+            <Button
+              // className='advanced-post postBtn'
+              disabled={editText === '<p></p>' ? true : false}
+              // style={globalStore.submitBtnStyle || submitBtnStyle}
+              onClick={async (e) =>
+                editText != '<p></p>'
+                  ? (await handleSubmit(e, editText),
+                    setEditor(EditorState.createEmpty()))
+                  : null
+              }
+              type="primary"
+              htmlType="submit">Post</Button>
           </div>
         </form>
       </div>

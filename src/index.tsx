@@ -1,7 +1,11 @@
 import * as React from 'react'
 import CommentSectionComponent from './components/CommentSectionComponent/Index'
 import GlobalProvider from './context/Provider'
+
 import './Index.scss'
+import { Comment } from "./interface"
+
+export * from './interface';
 
 interface CommentSectionProps {
   currentUser: {
@@ -34,30 +38,12 @@ interface CommentSectionProps {
   onEditAction?: Function
   customNoComment?: Function
   currentData?: Function
+  currentDataItem?: Function
   removeEmoji?: boolean
   advancedInput?: boolean
   placeHolder?: string
   showTimestamp?: boolean
-  commentData: Array<{
-    userId: string
-    comId: string
-    fullName: string
-    avatarUrl: string
-    text: string
-    userProfile?: string
-    timestamp?: string
-    replies?:
-      | Array<{
-          userId: string
-          comId: string
-          fullName: string
-          avatarUrl: string
-          text: string
-          timestamp?: string
-          userProfile?: string
-        }>
-      | undefined
-  }>
+  commentData: Comment[]
 }
 
 export const CommentSection = ({
@@ -85,6 +71,7 @@ export const CommentSection = ({
   onEditAction,
   customNoComment,
   currentData,
+  currentDataItem,
   advancedInput
 }: CommentSectionProps) => {
 
@@ -106,6 +93,7 @@ export const CommentSection = ({
       onReplyAction={onReplyAction}
       onEditAction={onEditAction}
       currentData={currentData}
+      currentDataItem={currentDataItem}
       removeEmoji={removeEmoji}
       advancedInput={advancedInput}
       placeHolder={placeHolder}

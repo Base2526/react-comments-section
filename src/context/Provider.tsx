@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react'
-// const { v4: uuidv4 } = require('uuid')
 import _ from 'lodash'
 
-export const GlobalContext = createContext({})
+import { Status, CommentStatus, Comment } from "../interface"
 
+export const GlobalContext = createContext({})
 export const GlobalProvider = ({
   children,
   currentUser,
@@ -21,6 +21,7 @@ export const GlobalProvider = ({
   onReplyAction,
   onEditAction,
   currentData,
+  currentDataItem,
   replyInputStyle,
   removeEmoji,
   advancedInput,
@@ -43,59 +44,22 @@ export const GlobalProvider = ({
   replyInputStyle?: object
   commentsCount?: number
   removeEmoji?: boolean
-  commentData?: Array<{
-    userId: string
-    comId: string
-    fullName: string
-    avatarUrl: string
-    text: string
-    timestamp?: string
-    userProfile?: string
-    replies?:
-      | Array<{
-          userId: string
-          comId: string
-          fullName: string
-          avatarUrl: string
-          text: string
-          timestamp?: string
-          userProfile?: string
-        }>
-      | undefined
-  }>
+  commentData?: Comment[]
   onSubmitAction?: Function
   onDeleteAction?: Function
   onReplyAction?: Function
   onEditAction?: Function
   currentData?: Function
+  currentDataItem?: Function
   advancedInput?: boolean
   placeHolder?: string
 }) => {
-  const [currentUserData] = useState(currentUser)
-  const [data, setData] = useState<
-    Array<{
-      userId: string
-      comId: string
-      fullName: string
-      avatarUrl: string
-      text: string
-      userProfile?: string
-      timestamp?: string
-      replies?:
-        | Array<{
-            userId: string
-            comId: string
-            fullName: string
-            avatarUrl: string
-            text: string
-            timestamp?: string
-            userProfile?: string
-          }>
-        | undefined
-    }>
-  >([])
-  const [editArr, setEdit] = useState<string[]>([])
-  const [replyArr, setReply] = useState<string[]>([])
+  const [currentUserData] = useState(currentUser);
+  const [data, setData] =useState<Comment[]>([]);
+  const [editArr, setEdit] = useState<string[]>([]);
+  const [replyArr, setReply] = useState<string[]>([]);
+
+  const [pendingAction, setPendingAction] = useState<any | null>(null);
 
   useEffect(() => {
     if (commentData) {
@@ -107,7 +71,19 @@ export const GlobalProvider = ({
     if (currentData) {
       currentData(data)
     }
+    
   }, [data])
+
+  useEffect(() => {
+    if (pendingAction) {
+      onCurrentDataItem(pendingAction);
+      setPendingAction(null);
+    }
+  }, [data]);
+
+  const onCurrentDataItem = (data: any) =>{
+    currentDataItem && currentDataItem(data)
+  }
 
   const handleAction = (id: string, edit: boolean) => {
     if (edit) {
@@ -134,20 +110,25 @@ export const GlobalProvider = ({
   }
 
   const onSubmit = (text: string, uuid: string) => {
+    let _data = {
+                  userId: currentUserData!.currentUserId,
+                  parentId: "",
+                  comId: uuid,
+                  avatarUrl: currentUserData!.currentUserImg,
+                  userProfile: currentUserData!.currentUserProfile
+                    ? currentUserData!.currentUserProfile
+                    : undefined,
+                  fullName: currentUserData!.currentUserFullName,
+                  text: text,
+                  timestamp: `${new Date().toISOString()}`,
+                  status: CommentStatus.Idle,
+                  replies: []
+                }
+
     let copyData = [...data]
-    copyData.push({
-      userId: currentUserData!.currentUserId,
-      comId: uuid,
-      avatarUrl: currentUserData!.currentUserImg,
-      userProfile: currentUserData!.currentUserProfile
-        ? currentUserData!.currentUserProfile
-        : undefined,
-      fullName: currentUserData!.currentUserFullName,
-      text: text,
-      timestamp: `${new Date().toISOString()}`,
-      replies: []
-    })
+    copyData.push(_data);
     setData(copyData)
+    setPendingAction({mode: Status.New, valus: _data})
   }
 
   const onEdit = (text: string, comId: string, parentId: string) => {
@@ -158,12 +139,16 @@ export const GlobalProvider = ({
         comId: comId
       })
       copyData[indexOfParent].replies![indexOfId].text = text
+
       setData(copyData)
+      setPendingAction({mode: Status.Edit, comId: copyData[indexOfParent].replies![indexOfId].comId, text})
       handleAction(comId, true)
     } else {
       const indexOfId = _.findIndex(copyData, { comId: comId })
       copyData[indexOfId].text = text
+      
       setData(copyData)
+      setPendingAction({mode: Status.Edit, comId: copyData[indexOfId].comId, text})
       handleAction(comId, true)
     }
   }
@@ -175,37 +160,49 @@ export const GlobalProvider = ({
     uuid: string
   ) => {
     let copyData = [...data]
+
     if (parentId) {
       const indexOfParent = _.findIndex(copyData, { comId: parentId })
-      copyData[indexOfParent].replies!.push({
-        userId: currentUserData!.currentUserId,
-        comId: uuid,
-        avatarUrl: currentUserData!.currentUserImg,
-        userProfile: currentUserData!.currentUserProfile
-          ? currentUserData!.currentUserProfile
-          : undefined,
-        fullName: currentUserData!.currentUserFullName,
-        text: text,
-        timestamp: `${new Date().toISOString()}`
-      })
+      let _data = {
+                    userId: currentUserData!.currentUserId,
+                    parentId,
+                    comId: uuid,
+                    avatarUrl: currentUserData!.currentUserImg,
+                    userProfile: currentUserData!.currentUserProfile
+                      ? currentUserData!.currentUserProfile
+                      : undefined,
+                    fullName: currentUserData!.currentUserFullName,
+                    text: text,
+                    status: CommentStatus.Idle,
+                    timestamp: `${new Date().toISOString()}`
+                  }
+      copyData[indexOfParent].replies!.push(_data)
+      
       setData(copyData)
+      setPendingAction({mode: Status.New, data: _data})
       handleAction(comId, false)
     } else {
       const indexOfId = _.findIndex(copyData, {
         comId: comId
       })
-      copyData[indexOfId].replies!.push({
-        userId: currentUserData!.currentUserId,
-        comId: uuid,
-        avatarUrl: currentUserData!.currentUserImg,
-        userProfile: currentUserData!.currentUserProfile
-          ? currentUserData!.currentUserProfile
-          : undefined,
-        fullName: currentUserData!.currentUserFullName,
-        text: text,
-        timestamp: `${new Date().toISOString()}`
-      })
+
+      let _data = {
+                    userId: currentUserData!.currentUserId,
+                    parentId: comId,
+                    comId: uuid,
+                    avatarUrl: currentUserData!.currentUserImg,
+                    userProfile: currentUserData!.currentUserProfile
+                      ? currentUserData!.currentUserProfile
+                      : undefined,
+                    fullName: currentUserData!.currentUserFullName,
+                    text: text,
+                    status: CommentStatus.Idle,
+                    timestamp: `${new Date().toISOString()}`
+                  }
+      copyData[indexOfId].replies!.push(_data)
+     
       setData(copyData)
+      setPendingAction({mode: Status.New, data: _data})
       handleAction(comId, false)
     }
   }
@@ -218,11 +215,15 @@ export const GlobalProvider = ({
         comId: comId
       })
       copyData[indexOfParent].replies!.splice(indexOfId, 1)
+      
       setData(copyData)
+      setPendingAction({mode: Status.Delete, comId})
     } else {
       const indexOfId = _.findIndex(copyData, { comId: comId })
       copyData.splice(indexOfId, 1)
+      
       setData(copyData)
+      setPendingAction({mode: Status.Delete, comId})
     }
   }
 

@@ -1,26 +1,27 @@
-import React from 'react'
-import { CommentSection } from 'react-comments-section-ts'
+import React, { useState } from 'react'
+import { CommentSection, CommentStatus } from 'react-comments-section-ts'
 import 'react-comments-section-ts/dist/index.css'
-import { useState } from 'react'
 
 const AdvancedComponent = () => {
   let date = new Date()
 
-  const [data] = useState([
+  const [data, setData] = useState([
     {
-      userId: '01a',
+      userId: '02b',
+      parentId: '',
       comId: '012',
+      status: CommentStatus.Success,
       fullName: 'Riya Negi',
       avatarUrl: 'https://ui-avatars.com/api/name=Riya&background=random',
       userProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
       text: `<p>Hey <strong>loved</strong> your blog! Can you show me some other ways to <del><em>fix</em></del>  solve this?🤔<br>Here's my <a href="https://www.linkedin.com/in/riya-negi-8879631a9/" target="_blank">Linkedin Profile</a> to reach out.</p>`,
-      timestamp: `${new Date(
-        date.getTime() - 5 * 60 * 60 * 1000
-      ).toISOString()}`,
+      timestamp: `${new Date( date.getTime() - 5 * 60 * 60 * 1000 ).toISOString()}`,
       replies: [
         {
           userId: '02a',
+          parentId: '012',
           comId: '013',
+          status: CommentStatus.Success,
           userProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
           fullName: 'Adam Scott',
           avatarUrl: 'https://ui-avatars.com/api/name=Adam&background=random',
@@ -29,13 +30,13 @@ const AdvancedComponent = () => {
           <p>Best of luck with your project! <br></p>
           <img src="https://c.tenor.com/4cR1jMpsrEgAAAAC/snoopy-cheerleader.gif" alt="undefined" style="height: auto;width: auto"/>
           <p></p>`,
-          timestamp: `${new Date(
-            date.getTime() - 30 * 60 * 1000
-          ).toISOString()}`
+          timestamp: `${new Date( date.getTime() - 30 * 60 * 1000 ).toISOString()}`
         },
         {
-          userId: '01a',
+          userId: '02b',
+          parentId: '012',
           comId: '014',
+          status: CommentStatus.Success,
           userProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
           fullName: 'Riya Negi',
           avatarUrl: 'https://ui-avatars.com/api/name=Riya&background=random',
@@ -46,7 +47,9 @@ const AdvancedComponent = () => {
     },
     {
       userId: '02b',
+      parentId: '',
       comId: '017',
+      status: CommentStatus.Success,
       fullName: 'Lily',
       userProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
       text: `<blockquote><strong>DRY </strong>- is the right of passage to good coding</blockquote>
@@ -57,9 +60,7 @@ const AdvancedComponent = () => {
       <li>Yoursef</li>
       </ol>`,
       avatarUrl: 'https://ui-avatars.com/api/name=Lily&background=random',
-      timestamp: `${new Date(
-        date.getTime() - 3 * 60 * 60 * 1000
-      ).toISOString()}`,
+      timestamp: `${new Date( date.getTime() - 3 * 60 * 60 * 1000 ).toISOString()}`,
       replies: []
     }
   ])
@@ -74,6 +75,39 @@ const AdvancedComponent = () => {
       >
         <span className='title'>Advanced Input Component - 001</span>
       </a> */}
+      <button
+  onClick={() => {
+    const newComment = {
+      userId: '02c',
+      parentId: '',
+      comId: '100',
+      status: CommentStatus.Success,
+      fullName: 'New User',
+      avatarUrl: 'https://ui-avatars.com/api/name=New+User&background=random',
+      userProfile: 'https://example.com/new-user',
+      text: `<p>This is a new comment!</p>`,
+      timestamp: new Date().toISOString(),
+      replies: []
+    }
+
+    setData((prevData) => [...prevData, newComment])
+  }}
+>
+  Add New Comment
+</button>
+
+      <button
+        onClick={() => {
+          setData((prevData) =>
+            prevData.map((comment) =>
+              comment.comId === '012'
+                ? { ...comment, text: '<p>This comment has been edited!</p>' }
+                : comment
+            )
+          )
+        }}>
+        Edit Comment '012'
+      </button>
       <CommentSection
         currentUser={ 
           // null
@@ -91,6 +125,9 @@ const AdvancedComponent = () => {
         commentData={data}
         currentData={(data: any) => {
           console.log('current data', data)
+        }}
+        currentDataItem={(data: any) => {
+          console.log('current data item', data)
         }}
         logIn={{
           onLogin: () => alert('Call login function '),

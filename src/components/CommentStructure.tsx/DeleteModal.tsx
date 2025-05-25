@@ -1,49 +1,54 @@
-import { useState, useContext } from 'react'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
-import { GlobalContext } from '../../context/Provider'
-import React from 'react'
+import { useState, useContext } from 'react';
+import { Modal, Button } from 'antd';
+import { GlobalContext } from '../../context/Provider';
+import React from 'react';
 
 interface DeleteModalProps {
-  comId: string
-  parentId?: string
+  comId: string;
+  parentId?: string;
 }
 
 const DeleteModal = ({ comId, parentId }: DeleteModalProps) => {
-  const [open, setOpen] = useState(false)
-  const onOpenModal = () => setOpen(true)
-  const onCloseModal = () => setOpen(false)
-  const globalStore: any = useContext(GlobalContext)
+  const [open, setOpen] = useState(false);
+  const globalStore: any = useContext(GlobalContext);
+
+  const showModal = () => setOpen(true);
+  const handleCancel = () => setOpen(false);
+
+  const handleDelete = async () => {
+    await globalStore.onDelete(comId, parentId);
+    if (globalStore.onDeleteAction) {
+      await globalStore.onDeleteAction({
+        comIdToDelete: comId,
+        parentOfDeleteId: parentId
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <div>
-      <div style={{ width: '100%' }} onClick={onOpenModal}>
-        delete
+      <div style={{ width: '100%', cursor: 'pointer' }} onClick={showModal}>
+        Delete
       </div>
-      <Modal open={open} onClose={onCloseModal} center>
-        <h2>Are you sure?</h2>
-        <p>Once you delete this comment it will be gone forever.</p>
-        <div className='deleteBtns'>
-          <button
-            className='delete'
-            onClick={async () => (
-              await globalStore.onDelete(comId, parentId),
-              globalStore.onDeleteAction &&
-                (await globalStore.onDeleteAction({
-                  comIdToDelete: comId,
-                  parentOfDeleteId: parentId
-                }))
-            )}
-          >
-            Delete
-          </button>
-          <button className='cancel' onClick={onCloseModal}>
+      <Modal
+        title="Are you sure?"
+        open={open}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="cancel" onClick={handleCancel}>
             Cancel
-          </button>
-        </div>
+          </Button>,
+          <Button key="delete" type="primary" danger onClick={handleDelete}>
+            Delete
+          </Button>
+        ]}
+        centered
+      >
+        <p>Once you delete this comment it will be gone forever.</p>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default DeleteModal
+export default DeleteModal;

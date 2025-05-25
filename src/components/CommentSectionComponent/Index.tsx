@@ -1,12 +1,14 @@
-import CommentStructure from '../CommentStructure.tsx/Index'
-import InputField from '../InputField/Index'
-import './CommentSection.css'
-import { useContext, useEffect } from 'react'
-import { GlobalContext } from '../../context/Provider'
+import React, { useContext, useEffect } from 'react'
 import _ from 'lodash'
-import React from 'react'
+
 import LoginSection from '../LoginSection/LoginSection'
 import NoComments from './NoComments'
+import { GlobalContext } from '../../context/Provider'
+import CommentStructure from '../CommentStructure.tsx/Index'
+import InputField from '../InputField/Index'
+import { Comment } from "../../interface";
+
+import './CommentSection.css'
 
 interface CommentSectionProps {
   overlayStyle?: object
@@ -83,15 +85,7 @@ const CommentSection = ({
 
       {globalStore.data.length > 0 ? (
         globalStore.data.map(
-          (i: {
-            userId: string
-            comId: string
-            fullName: string
-            avatarUrl: string
-            text: string
-            userProfile?: string
-            replies: Array<any> | undefined
-          }) => {
+          (i: Comment ) => {
             return (
               <div key={i.comId}>
                 <CommentStructure

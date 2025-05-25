@@ -1,31 +1,31 @@
-# react-comments-section
+# react-comments-section-ts
 
 ## Install
 
 Install the latest version!
 
 ```bash
-npm i react-comments-section
+npm i react-comments-section-ts
 ```
 
 ## Detailed Documentation : https://riyanegi.github.io/react-comments-documentation/
 
-`react-comments-section` is a simple but multi-functional react comment section component that helps you create comments section similar to youtube or instagram for your React App.
-`react-comments-section` is very useful for react beginners who want a comment section in their project but want to skip it's complexity. This library will give a fully functional comment section with the following features:
+`react-comments-section-ts` is a simple but multi-functional react comment section component that helps you create comments section similar to youtube or instagram for your React App.
+`react-comments-section-ts` is very useful for react beginners who want a comment section in their project but want to skip it's complexity. This library will give a fully functional comment section with the following features:
 
 - User can reply to comments
 - User can edit his/her comments
 - User can delete his/her comments
 
-live demo of the library -> https://riyanegi.github.io/react-comments-section/
+live demo of the library -> https://riyanegi.github.io/react-comments-section-ts/
 
 ## Default Example
 
-![commentbox](https://github.com/RiyaNegi/react-comments-section/blob/main/example/blob/default.png?raw=true)
+![commentbox](https://github.com/RiyaNegi/react-comments-section-ts/blob/main/example/blob/default.png?raw=true)
 
 ## Advanced Input (rich text editor)
 
-![commentbox](https://github.com/RiyaNegi/react-comments-section/blob/main/example/blob/advanced.png?raw=true)
+![commentbox](https://github.com/RiyaNegi/react-comments-section-ts/blob/main/example/blob/advanced.png?raw=true)
 
 ## Usage
 
@@ -43,8 +43,8 @@ system and here are a few important points to remember:
 
 ```jsx
 import React from 'react'
-import { CommentSection} from 'react-comments-section'
-import 'react-comments-section/dist/index.css'
+import { CommentSection} from 'react-comments-section-ts'
+import 'react-comments-section-ts/dist/index.css'
 
 const DefaultComponent = () => {
   const data =[
@@ -98,8 +98,8 @@ export default DefaultComponent
 
 ```jsx
 import React, { PureComponent } from 'react'
-import { CommentSection } from 'react-comments-section'
-import 'react-comments-section/dist/index.css'
+import { CommentSection } from 'react-comments-section-ts'
+import 'react-comments-section-ts/dist/index.css'
 
 class ClassComponent extends PureComponent {
   state = {

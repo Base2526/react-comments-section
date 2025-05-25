@@ -7,7 +7,8 @@ import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 
-import { Button } from "antd";
+import { Avatar, Button } from "antd";
+import { UserOutlined, SendOutlined } from '@ant-design/icons';
 
 interface AdvancedInputProps {
   formStyle?: object
@@ -61,6 +62,33 @@ const AdvancedInput = ({
   const onEditorStateChange: Function = (editorState: any) => {
     setEditor(editorState)
   }
+
+  const handleReturn = (
+    e: React.KeyboardEvent,
+    editorState: EditorState
+  ): boolean => {
+    if (e.shiftKey) {
+      // Allow newline
+      return false; // not handled
+    } else {
+      // Send message
+      const content = editorState.getCurrentContent();
+      const plainText = content.getPlainText().trim();
+
+      if (plainText.length > 0) {
+        console.log('Sending message:', plainText);
+        // Clear the editor
+        // const newEditorState = EditorState.push(
+        //   editorState,
+        //   ContentState.createFromText('')
+        // );
+        // setEditorState(newEditorState);
+      }
+
+      return true; // handled
+    }
+  };
+
   useEffect(() => {
     setEditText(
       draftToHtml(convertToRaw(editorState.getCurrentContent())).trim()
@@ -74,7 +102,7 @@ const AdvancedInput = ({
           target='_blank'
           href={globalStore.currentUserData.currentUserProfile}
         >
-          <img
+          {/* <img
             src={
               globalStore.customImg ||
               customImg ||
@@ -83,7 +111,17 @@ const AdvancedInput = ({
             style={globalStore.imgStyle || imgStyle}
             alt='userIcon'
             className='imgdefault'
-          />
+          /> */}
+
+          <Avatar 
+            size={32} 
+            src={
+              globalStore.customImg ||
+              customImg ||
+              globalStore.currentUserData.currentUserImg
+            } 
+            className='imgdefault'
+            icon={<UserOutlined />} />
         </a>
       </div>
       <div className='advanced-input'>
@@ -104,6 +142,7 @@ const AdvancedInput = ({
               onEditorStateChange={(editorState) =>
                 onEditorStateChange(editorState)
               }
+              handleReturn={handleReturn}
               toolbar={{
                 options: [
                   'inline',
@@ -227,6 +266,7 @@ const AdvancedInput = ({
                   : null
               }
               type="primary"
+              icon={<SendOutlined />}
               htmlType="submit">Post</Button>
           </div>
         </form>

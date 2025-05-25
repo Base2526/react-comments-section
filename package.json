@@ -1,6 +1,6 @@
 {
   "name": "react-comments-section-ts",
-  "version": "0.0.1",
+  "version": "0.0.4-beta",
   "description": "React component library for a functioning comments section [TS]",
   "author": "Base2526",
   "license": "MIT",
@@ -80,7 +80,6 @@
     "emoji-picker-react": "^3.5.1",
     "html-to-draftjs": "^1.5.0",
     "react-draft-wysiwyg": "^1.14.7",
-    "react-responsive-modal": "^6.2.0",
     "sass": "^1.51.0"
   }
 }

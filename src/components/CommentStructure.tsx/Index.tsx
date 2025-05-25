@@ -1,26 +1,18 @@
 import './CommentStructure.scss'
-import { useContext } from 'react'
+import '@szhsin/react-menu/dist/core.css'
+
+import React, { useContext } from 'react'
+import { Menu, MenuItem } from '@szhsin/react-menu'
+import { Avatar, Button } from "antd";
+import { UserOutlined, MoreOutlined } from '@ant-design/icons';
+
+import DeleteModal from './DeleteModal'
 import { GlobalContext } from '../../context/Provider'
 import InputField from '../InputField/Index'
-import { Menu, MenuItem } from '@szhsin/react-menu'
-import '@szhsin/react-menu/dist/core.css'
-import DeleteModal from './DeleteModal'
-import React from 'react'
-
-import { Avatar, Button } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { Comment, CommentStatus } from "../../interface";
 
 interface CommentStructureProps {
-  info: {
-    userId: string
-    comId: string
-    fullName: string
-    avatarUrl: string
-    text: string
-    userProfile?: string
-    timestamp?: string
-    replies?: Array<object> | undefined
-  }
+  info: Comment
   editMode: boolean
   parentId?: string
   replyMode: boolean
@@ -49,16 +41,13 @@ const CommentStructure = ({
         {info.userId === currentUser.currentUserId && (
           <Menu
             menuButton={
-              <button className='actionsBtn'>
-                {' '}
-                <div className='optionIcon' />
-              </button>
+            <Button type="text" shape="circle" icon={<MoreOutlined style={{ fontSize: 18 }}/>} />
             }
           >
             <MenuItem
               onClick={() => globalStore.handleAction(info.comId, true)}
             >
-              edit
+              Edit
             </MenuItem>
             <MenuItem>
               <DeleteModal comId={info.comId} parentId={parentId} />
@@ -142,7 +131,7 @@ const CommentStructure = ({
             <div style={{display:"flex"}}>
               <div
                 className='infoStyle'
-                style={{backgroundColor: "gray", padding: '10px', borderRadius: "15px"}}
+                style={{backgroundColor: "#f3f3f3", padding: '10px', borderRadius: "15px"}}
                 dangerouslySetInnerHTML={{
                   __html: info.text
                 }}
@@ -159,15 +148,21 @@ const CommentStructure = ({
             {' '}
             {currentUser && (
               <div>
-                <span className='commenttimestamp'>
-                  {showTimestamp && (info.timestamp == null ? null : timeAgo(info.timestamp))}
-                </span>
-                <Button 
-                  className="replyBtn"
-                  color="default" 
-                  variant="link" 
-                  size="small"
-                  onClick={()=>  globalStore.handleAction(info.comId, false) } >Reply</Button>
+                {
+                  info.status == CommentStatus.Posting 
+                  ? <span>Posting...</span>
+                  : <div>
+                      <span className='commenttimestamp'>
+                        {showTimestamp && (info.timestamp == null ? null : timeAgo(info.timestamp))}
+                      </span>
+                      <Button 
+                        className="replyBtn"
+                        color="default" 
+                        variant="link" 
+                        size="small"
+                        onClick={()=>  globalStore.handleAction(info.comId, false) } >Reply</Button>    
+                    </div>
+                }
               </div>
             )}
           </div>

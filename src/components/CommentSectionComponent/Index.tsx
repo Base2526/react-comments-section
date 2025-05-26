@@ -83,6 +83,13 @@ const CommentSection = ({
         />
       )}
 
+      <div 
+        className='comment-list'
+        style={{
+          maxHeight: '600px', // or any size you want
+          overflowY: 'auto',
+          paddingRight: '8px' // Optional: to avoid scrollbar overlap
+        }}>
       {globalStore.data.length > 0 ? (
         globalStore.data.map(
           (i: Comment ) => {
@@ -136,6 +143,7 @@ const CommentSection = ({
       ) : (
         <NoComments />
       )}
+      </div>
     </div>
   )
 }

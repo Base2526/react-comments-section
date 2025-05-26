@@ -128,11 +128,11 @@ export const GlobalProvider = ({
     let copyData = [...data]
     copyData.push(_data);
     setData(copyData)
-    setPendingAction({mode: Status.New, valus: _data})
+    setPendingAction({mode: Status.New, data: _data})
   }
 
   const onEdit = (text: string, comId: string, parentId: string) => {
-    let copyData = [...data]
+    let copyData = _.cloneDeep(data);
     if (parentId) {
       const indexOfParent = _.findIndex(copyData, { comId: parentId })
       const indexOfId = _.findIndex(copyData[indexOfParent].replies, {
@@ -159,7 +159,7 @@ export const GlobalProvider = ({
     parentId: string,
     uuid: string
   ) => {
-    let copyData = [...data]
+    let copyData =  _.cloneDeep(data);
 
     if (parentId) {
       const indexOfParent = _.findIndex(copyData, { comId: parentId })
@@ -208,7 +208,7 @@ export const GlobalProvider = ({
   }
 
   const onDelete = (comId: string, parentId: string) => {
-    let copyData = [...data]
+    let copyData =  _.cloneDeep(data)
     if (parentId) {
       const indexOfParent = _.findIndex(copyData, { comId: parentId })
       const indexOfId = _.findIndex(copyData[indexOfParent].replies, {

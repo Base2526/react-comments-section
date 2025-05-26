@@ -23,3 +23,9 @@ react-comments-section
 
 Force a version update:
 npm install react-comments-section-ts@x.x.x --save-exact
+
+
+
+npm login
+npm run build
+npm publish --access public
